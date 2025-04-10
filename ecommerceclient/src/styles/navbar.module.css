@@ -1,0 +1,27 @@
+@keyframes drop-down {
+    from {
+        transform: scaleY(0);
+    }
+    to {
+        transform: scaleY(1);
+    }
+}
+
+@keyframes wrap-up {
+    from {
+        transform: scaleY(1);
+    }
+    to {
+        transform: scaleY(0);
+    }
+}
+
+.slide-down {
+    animation: drop-down 0.5s ease-in-out forwards;
+    transform-origin: top;
+}
+
+.wrap-up {
+    animation: wrap-up 0.5s ease-in-out forwards;
+    transform-origin: top;
+}

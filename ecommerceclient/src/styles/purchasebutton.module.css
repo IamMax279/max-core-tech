@@ -1,0 +1,7 @@
+.on-hover {
+    transition: filter 0.2s ease-in-out;
+}
+
+.on-hover:hover {
+    filter: brightness(0.85)
+}
