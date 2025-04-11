@@ -58,19 +58,29 @@ export async function middleware(request: NextRequest) {
         }
     } else {
         if(url.startsWith("/verify-email")) {
-            const token = request.nextUrl.searchParams.get("token")
-            if(!token) {
-                return NextResponse.redirect(new URL('/', request.url))
-            }
+            try {
+                const token = request.nextUrl.searchParams.get("token")
+                if(!token) {
+                    return NextResponse.redirect(new URL('/', request.url))
+                }
+    
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://server:3001';
+                const res = await fetch(`${apiUrl}/user/verify-token?token=${token}`);
 
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/user/is-verified?token=${token}`
-            )
-            const data = await res.json()
-
-            if(data && data.success) {
-                return NextResponse.next()
-            } else {
+                if (!res.ok) {
+                    console.log("Error making a request in the middleware:", res)
+                    throw new Error("Error verifying token")
+                }
+                
+                const data = await res.json();
+    
+                if(data && data.success) {
+                    return NextResponse.next()
+                } else {
+                    return NextResponse.redirect(new URL('/', request.url))
+                }
+            } catch(error) {
+                console.error("Error in verify-email middleware:", error);
                 return NextResponse.redirect(new URL('/', request.url))
             }
         } else {
@@ -85,6 +95,6 @@ export const config = {
         '/cart/:path*',
         '/change-password/:path*',
         '/new-password/:path*',
-        '/verify-email:path*'
+        '/verify-email/:path*'
     ]
 }
