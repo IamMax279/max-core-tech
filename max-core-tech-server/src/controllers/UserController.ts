@@ -214,7 +214,7 @@ export class UserController {
             const userAddress = await prisma.userAddresses.findFirst({
                 where: {userId: BigInt(data.userId)}
             })
-            if(userAddress) {
+            if(userAddress && !isTemporary) {
                 const {userId, ...toUpdate} = data
                 await prisma.userAddresses.update({
                     where: {userId: BigInt(data.userId)},
