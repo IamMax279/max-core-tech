@@ -15,9 +15,10 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package*.json ./
+COPY --from=build /app/package.json ./
+COPY --from=build /app/package-lock.json ./
 COPY --from=build /app/.env ./
 ENV NODE_ENV=production
 ENV PORT=3001
 EXPOSE 3001
-CMD ["npm", "run", "start:prod"]
+CMD npx prisma migrate deploy && npx prisma db seed && npm run start:prod
