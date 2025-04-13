@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 import { signupSchema } from "@/schemas/SignupSchema";
 import { useMutation } from "@tanstack/react-query";
 import { SignupValues } from "@/types/AuthTypes";
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -22,6 +22,8 @@ import { GoArrowLeft } from "react-icons/go";
 export default function SignUp() {
     const [securePassword, setSecurePassword] = useState<boolean>(false)
     const [secureConfirmation, setSecureConfirmation] = useState<boolean>(false)
+    const [uniqueError, setUniqueError] = useState<boolean>(false)
+
     const { isAuthenticated, loading } = useAuth()
 
     const dispatch = useDispatch()
@@ -41,8 +43,15 @@ export default function SignUp() {
             router.push('/signed-up')
         },
         onError: (error) => {
+            setUniqueError(false)
             dispatch(setIsSigningUp(false))
-            console.log(error)
+
+            console.log("Error signing up:", error)
+            if(error instanceof AxiosError) {
+                if(error.response?.data.message.includes("Unique constraint")) {
+                    setUniqueError(true)
+                }
+            }
         }
     })
 
@@ -206,7 +215,12 @@ export default function SignUp() {
                         )}
                     </div>
                 </div>
-                <div className="mt-4 text-lg">
+                {uniqueError &&
+                <p className="flex self-center text-center mt-3 text-red-500">
+                    A user with this email already exists.
+                </p>
+                }
+                <div className={`text-lg ${uniqueError ? "mt-3" : "mt-4"}`}>
                     <p className="lg:text-start text-center">
                         Already have an account?
                         <span className="text-purchaseButton cursor-pointer text-lg hover:brightness-90">
