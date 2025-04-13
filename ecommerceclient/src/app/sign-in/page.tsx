@@ -30,6 +30,7 @@ export default function SignIn() {
     const [securePassword, setSecurePassword] = useState<boolean>(false)
     const [error, setError] = useState<boolean>(false)
     const [emailError, setEmailError] = useState<boolean>(false)
+    const [unverified, setUnverified] = useState<boolean>(false)
 
     const {isOpen, onOpen, onOpenChange} = useDisclosure()
     const { isAuthenticated, loading } = useAuth()
@@ -46,6 +47,8 @@ export default function SignIn() {
         onSuccess: (data) => {
             setError(false)
             setEmailError(false)
+            setUnverified(false)
+
             onOpen()
 
             AuthService.setJwt(data.data.jwt)
@@ -58,11 +61,15 @@ export default function SignIn() {
         onError: (error) => {
             setError(false)
             setEmailError(false)
+            setUnverified(false)
             console.log("An error occured:", error)
             if(error instanceof AxiosError) {
                 switch(error.response?.data.message) {
                     case "This user does not exist.":
                         setEmailError(true)
+                        break
+                    case "user not verified":
+                        setUnverified(true)
                         break
                     default:
                         setError(true)
@@ -174,6 +181,11 @@ export default function SignIn() {
                     <p className="flex self-center mt-3 text-red-500">
                         Wrong credentials.
                     </p>
+                }
+                {unverified &&
+                <p className="flex self-center mt-3 text-red-500">
+                    Email unverified.
+                </p>
                 }
                 <div className={`${error || emailError ? "mt-2" : "mt-4"} text-lg`}>
                     <p className="lg:text-start text-center">
