@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
 
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-token?token=${token}`,
+                process.env.NEXT_PUBLIC_MIDDLEWARE_URL + `/auth/verify-token?token=${token}`,
                 {
                     headers: {
                         "Authorization": `Bearer ${authT}`
@@ -56,7 +56,8 @@ export async function middleware(request: NextRequest) {
             console.error("Error validating token:", error)
             return NextResponse.redirect(new URL('/', request.url))
         }
-    } else {
+    } 
+    else {
         if(url.startsWith("/verify-email")) {
             try {
                 const token = request.nextUrl.searchParams.get("token")
@@ -64,8 +65,9 @@ export async function middleware(request: NextRequest) {
                     return NextResponse.redirect(new URL('/', request.url))
                 }
     
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://server:3001';
-                const res = await fetch(`${apiUrl}/user/verify-token?token=${token}`);
+                const res = await fetch(
+                    process.env.NEXT_PUBLIC_MIDDLEWARE_URL + `/user/is-verified?token=${token}`
+                )
 
                 if (!res.ok) {
                     console.log("Error making a request in the middleware:", res)
@@ -75,9 +77,9 @@ export async function middleware(request: NextRequest) {
                 const data = await res.json();
     
                 if(data && data.success) {
-                    return NextResponse.next()
-                } else {
                     return NextResponse.redirect(new URL('/', request.url))
+                } else {
+                    return NextResponse.next()
                 }
             } catch(error) {
                 console.error("Error in verify-email middleware:", error);
