@@ -14,6 +14,13 @@ import Link from "next/link"
 import { IoIosLogOut } from "react-icons/io";
 import { useDispatch } from "react-redux"
 import { clearCart } from "@/redux/Slices"
+import {  
+    Modal,
+    ModalContent,
+    ModalBody,
+    ModalFooter}
+from "@heroui/modal";
+import { Button } from "@nextui-org/button";
 
 export default function Account() {
     const [userData, setUserData] = useState<UserData>({
@@ -31,6 +38,8 @@ export default function Account() {
         }
     })
     const [userId, setUserId] = useState<string | undefined>(undefined)
+    const [error, setError] = useState<boolean>(false)
+    const [modalOpen, setModalOpen] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -59,7 +68,7 @@ export default function Account() {
             }
 
             const result = await axios.get(
-                process.env.NEXT_PUBLIC_API_URL + "/user/get-user-data",
+                "/api/user/get-user-data",
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -70,6 +79,8 @@ export default function Account() {
             return result
         },
         onSuccess: (response) => {
+            console.log("Address found successfully:", response)
+            setError(false)
             setUserData(response?.data.userData)
 
             if(response?.data.userData.userAddress && !response?.data.userData.userAddress.isTemporary) {
@@ -85,12 +96,10 @@ export default function Account() {
                     city: address.city || ""
                 })
             }
-            console.log(response)
         },
         onError: (error) => {
-            if(error instanceof AxiosError) {
-                console.log("error making a request:", error)
-            }
+            console.log("ERROR:", error)
+            setError(true)
         }
     })
 
@@ -103,7 +112,7 @@ export default function Account() {
             }
 
             return await axios.post(
-                process.env.NEXT_PUBLIC_API_URL + "/user/add-user-address",
+                "/api/user/add-user-address",
                 {data, isTemporary: false},
                 {
                     headers: {
@@ -114,12 +123,9 @@ export default function Account() {
         },
         onSuccess: (data) => {
             notify()
-            console.log(data)
         },
         onError: (error) => {
-            if(error instanceof AxiosError) {
-                console.log("error making a request:", error)
-            }
+            setError(true)
         }
     })
 
@@ -315,19 +321,62 @@ export default function Account() {
                             )}
                         </div>
                     </div>
+                    {error &&
+                    <p className="flex self-center text-center mt-3 text-red-500">
+                        Something went wrong.
+                    </p>
+                    }
                     <PurchaseButton
                     text="Save"
                     className="bg-purchaseButton flex self-center"
                     />
                 </form>
-                <div className="w-1/4 min-w-[250px] mb-8">
+                <div className="w-1/4 min-w-[250px] mb-4">
                     <PurchaseButton
                     text="Change password"
                     className="bg-[#32a852] w-full"
                     onClick={() => router.push('/change-password')}
                     />
                 </div>
+                <div className="w-1/4 min-w-[250px] mb-8">
+                    <PurchaseButton
+                    text="Delete account"
+                    className="bg-red-700 w-full"
+                    onClick={() => setModalOpen(true)}
+                    />
+                </div>
             </main>
+        <Modal
+        isOpen={modalOpen}
+        isDismissable={false}
+        hideCloseButton={true}
+        >
+            <ModalContent className='bg-white pt-4 pb-2'>
+            {(onClose) => (
+                <>
+                <ModalBody>
+                    <p className='text-center'>
+                       Do you want to delete your account?
+                    </p>
+                </ModalBody>
+                <ModalFooter className='flex flex-row justify-center items-center gap-4'>
+                    <Button className='bg-purchaseButton font-semibold text-white
+                    hover:brightness-110 transition ease-in-out duration-200
+                    px-8'
+                    onPress={() => router.replace('/')}>
+                    Yes
+                    </Button>
+                    <Button className='bg-purchaseButton font-semibold text-white
+                    hover:brightness-110 transition ease-in-out duration-200
+                    px-8'
+                    onPress={() => router.replace('/')}>
+                    No
+                    </Button>
+                </ModalFooter>
+                </>
+            )}
+            </ModalContent>
+        </Modal>
         </div>
     )
 }
