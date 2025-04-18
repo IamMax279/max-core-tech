@@ -10,7 +10,7 @@ export class AuthService {
             const refresh = this.getRefresh()
             if(refresh) {
                 const res = await axios.post(
-                    process.env.NEXT_PUBLIC_API_URL + "/user/refresh-token",
+                    "/api/user/refresh-token",
                     {refresh}
                 )
                 if(res.data.accessToken) {
