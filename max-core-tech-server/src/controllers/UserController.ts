@@ -26,7 +26,7 @@ export class UserController {
                 }
             })
 
-            const token = AuthService.generateAccessToken(user.id.toString())
+            const token = AuthService.generateEmailToken(user.id.toString())
             const res = await AuthService.sendVerificationEmail(user.email, token)
 
             if(!res.success) {
@@ -157,7 +157,7 @@ export class UserController {
             }
 
             const userAddress = await prisma.userAddresses.findFirst({
-                where: {userId: user.id}
+                where: {userId: user.id, isTemporary: false}
             })
             if(!userAddress) {
                 return {
@@ -212,12 +212,12 @@ export class UserController {
 
         try {
             const userAddress = await prisma.userAddresses.findFirst({
-                where: {userId: BigInt(data.userId)}
+                where: {userId: BigInt(data.userId), isTemporary: false}
             })
             if(userAddress && !isTemporary) {
                 const {userId, ...toUpdate} = data
                 await prisma.userAddresses.update({
-                    where: {userId: BigInt(data.userId)},
+                    where: {id: userAddress.id},
                     data: {...toUpdate}
                 })
                 return {
@@ -341,6 +341,64 @@ export class UserController {
             return {
                 success: false,
                 message: error instanceof Error ? error.message : "Error sending password change email."
+            }
+        }
+    }
+
+    static async deleteAccount(password: string, token: string): Promise<RestResponse> {
+        try {
+            if(!password.trim() || !token.trim()) {
+                throw new Error("Missing password or token.")
+            }
+
+            const decoded: any = jwt.verify(token, process.env.JWT_SECRET!)
+            const userId = BigInt(decoded.userId)
+
+            const user = await prisma.user.findFirst({
+                where: {id: userId}
+            })
+            if(!user) {
+                throw new Error("This user does not exist.")
+            }
+
+            const isCorrect = await argon2.verify(user.password, password)
+            if(!isCorrect) {
+                throw new Error("Incorrect password.")
+            }
+
+            const orders = await prisma.order.findMany({
+                where: {userId: userId},
+                select: {id: true}
+            })
+
+            if(orders.length > 0) {
+                const orderIds = orders.map(order => order.id)
+                await prisma.orderItem.deleteMany({
+                    where: {orderId: {in: orderIds}}
+                })
+            }
+
+            await prisma.order.deleteMany({
+                where: {userId: userId}
+            })
+
+            await prisma.userAddresses.deleteMany({
+                where: {userId: userId}
+            })
+
+            await prisma.user.delete({
+                where: {id: userId}
+            })
+
+            return {
+                success: true,
+                message: "User deleted successfully"
+            }
+        } catch(error) {
+            console.error("Error deleting account:", error)
+            return {
+                success: false,
+                message: error instanceof Error ? error.message : "Error deleting account."
             }
         }
     }
