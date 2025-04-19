@@ -48,7 +48,7 @@ export default function NewPassword() {
             }
 
             return await axios.patch(
-                process.env.NEXT_PUBLIC_API_URL + "/user/change-password",
+                "/api/user/change-password",
                 {password: password},
                 {
                     headers: {
@@ -64,7 +64,6 @@ export default function NewPassword() {
             }
         },
         onError: (error) => {
-            console.log("error changing password:", error)
             setError(true)
         }
     })

@@ -8,6 +8,10 @@ export class AuthService {
         return jwt.sign({userId}, process.env.JWT_SECRET!, {expiresIn: '30m'})
     }
 
+    static generateEmailToken(userId: string): string {
+        return jwt.sign({userId}, process.env.JWT_SECRET!, {expiresIn: '1d'})
+    }
+
     static generateRefreshToken(userId: string): string {
         return jwt.sign({userId}, process.env.JWT_SECRET!, {expiresIn: '7d'})
     }
@@ -21,7 +25,6 @@ export class AuthService {
             jwt.verify(token, process.env.SHORT_SECRET!)
             return true
         } catch(error) {
-            console.log("error verifying jwt:", error)
             return false
         }
     }
@@ -42,8 +45,8 @@ export class AuthService {
             }
         })
 
-        // const url = `http://localhost:3001/user/verify-email?token=${token}`
-        const url = `http://localhost:3000/verify-email?token=${token}`
+        const clientURL = process.env.CLIENT_URL || 'http://localhost:3000';
+        const url = `${clientURL}/verify-email?token=${token}`
 
         try {
             await transporter.sendMail({

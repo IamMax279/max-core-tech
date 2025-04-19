@@ -34,19 +34,17 @@ export default function SignUp() {
         mutationFn: async (values: SignupValues) => {
             dispatch(setIsSigningUp(true))
             return await axios.post(
-                process.env.NEXT_PUBLIC_API_URL + "/user/register",
+                "/api/user/register",
                 values
             )
         },
         onSuccess: (data) => {
-            console.log(data)
             router.push('/signed-up')
         },
         onError: (error) => {
             setUniqueError(false)
             dispatch(setIsSigningUp(false))
 
-            console.log("Error signing up:", error)
             if(error instanceof AxiosError) {
                 if(error.response?.data.message.includes("Unique constraint")) {
                     setUniqueError(true)

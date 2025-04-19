@@ -34,7 +34,6 @@ const sendPasswordChangeLink = async (req: Request, res: Response): Promise<any>
             throw new Error(`Something went wrong: ${result.message}`)
         }
     } catch(error) {
-        console.log("Error sending password change link:", error)
         return res.status(400).json({
             success: false,
             message: "Server error sending password change link."

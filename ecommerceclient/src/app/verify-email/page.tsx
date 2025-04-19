@@ -15,6 +15,7 @@ import { Button } from "@nextui-org/button";
 export default function VerifyEmail() {
     const [verifying, setVerifying] = useState<boolean>(true)
     const [success, setSuccess] = useState<boolean>(false)
+    const [error, setError] = useState<boolean>(false)
 
     const searchParams = useSearchParams()
     const token = searchParams.get("token")
@@ -23,14 +24,15 @@ export default function VerifyEmail() {
 
     const verifyUser = async () => {
         try {
+            setError(false)
             const res = await axios.get(
-                process.env.NEXT_PUBLIC_API_URL + `/user/verify-email?token=${token}`
+                `/api/user/verify-email?token=${token}`
             )
             if(res.data.success) {
                 setSuccess(true)
             }
         } catch(error) {
-            console.log("error verifying user:", error)
+            setError(true)
         } finally {
             setVerifying(false)
         }
@@ -68,7 +70,7 @@ export default function VerifyEmail() {
                         <Button className='bg-purchaseButton font-semibold text-white
                         hover:brightness-110 transition ease-in-out duration-200
                         px-8'
-                        onPress={() => router.replace('/')}>
+                        onPress={() => router.replace('/sign-in')}>
                         OK
                         </Button>
                     </ModalFooter>

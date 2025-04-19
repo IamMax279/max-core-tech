@@ -18,6 +18,7 @@ import { RootState } from "@/redux/Store"
 
 export default function PaymentSuccessful() {
     const [addressId, setAddressId] = useState<string>("")
+    const [error, setError] = useState<boolean>(false)
 
     const dispatch = useDispatch()
 
@@ -32,7 +33,7 @@ export default function PaymentSuccessful() {
             }
 
             const res = await axios.get(
-                process.env.NEXT_PUBLIC_API_URL + "/user/get-user-data",
+                "/api/user/get-user-data",
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -48,10 +49,10 @@ export default function PaymentSuccessful() {
             }
         },
         onSuccess: (data) => {
-            console.log("User address retrieved successfully.")
+            setError(false)
         },
         onError: (error) => {
-            console.log("Error retrieving user data:", error)
+            setError(true)
         }
     })
 
@@ -65,7 +66,7 @@ export default function PaymentSuccessful() {
             const userId = await AuthService.retrievePayload("userId")
 
             const res = await axios.post(
-                process.env.NEXT_PUBLIC_API_URL + "/orders/add-order",
+                "/api/orders/add-order",
                 {
                     userId,
                     addressId,
@@ -82,10 +83,9 @@ export default function PaymentSuccessful() {
         },
         onSuccess: (data) => {
             dispatch(clearCart())
-            console.log("Order placed successfully.")
         },
         onError: (error) => {
-            console.log("Error in /payment-successful:", error)
+            setError(true)
         }
     })
 
@@ -101,9 +101,7 @@ export default function PaymentSuccessful() {
     }, [])
 
     useEffect(() => {
-        console.log("hm?")
         if(addressId) {
-            console.log("ORDRORORO")
             placeOrder()
         }
     }, [addressId])

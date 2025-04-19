@@ -18,7 +18,7 @@ import {
     Modal,
     ModalContent,
     ModalBody,
-    ModalFooter}
+    ModalFooter }
 from "@heroui/modal";
 import { Button } from "@nextui-org/button";
 
@@ -79,7 +79,6 @@ export default function Account() {
             return result
         },
         onSuccess: (response) => {
-            console.log("Address found successfully:", response)
             setError(false)
             setUserData(response?.data.userData)
 
@@ -98,7 +97,6 @@ export default function Account() {
             }
         },
         onError: (error) => {
-            console.log("ERROR:", error)
             setError(true)
         }
     })
@@ -363,13 +361,13 @@ export default function Account() {
                     <Button className='bg-purchaseButton font-semibold text-white
                     hover:brightness-110 transition ease-in-out duration-200
                     px-8'
-                    onPress={() => router.replace('/')}>
+                    onPress={() => router.replace('/delete-account')}>
                     Yes
                     </Button>
                     <Button className='bg-purchaseButton font-semibold text-white
                     hover:brightness-110 transition ease-in-out duration-200
                     px-8'
-                    onPress={() => router.replace('/')}>
+                    onPress={() => setModalOpen(false)}>
                     No
                     </Button>
                 </ModalFooter>

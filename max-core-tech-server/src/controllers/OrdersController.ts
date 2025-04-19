@@ -6,8 +6,6 @@ import { RestResponse } from "../types/ResponseTypes";
 export class OrdersController {
     static async addOrder(userId: string, addressId: string, items: Item[]): Promise<RestResponse> {
         try {
-            console.log("Just hit the order:", userId, addressId, items)
-
             const orderItemPromises = items.map(async (item) => ({
                 productId: await this.findByName(item.id),
                 quantity: item.quantity,

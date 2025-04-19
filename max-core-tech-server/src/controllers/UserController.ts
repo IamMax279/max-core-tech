@@ -395,7 +395,6 @@ export class UserController {
                 message: "User deleted successfully"
             }
         } catch(error) {
-            console.error("Error deleting account:", error)
             return {
                 success: false,
                 message: error instanceof Error ? error.message : "Error deleting account."

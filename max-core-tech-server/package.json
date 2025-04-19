@@ -10,6 +10,9 @@
     "compile": "tsc",
     "start:prod": "node dist/src/main.js"
   },
+  "prisma": {
+    "seed": "node dist/prisma/script.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

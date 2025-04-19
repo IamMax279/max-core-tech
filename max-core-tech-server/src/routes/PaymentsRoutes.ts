@@ -14,7 +14,6 @@ const purchase = async (req: Request, res: Response): Promise<any> => {
         const result = await PaymentsController.purchase(items)
         return res.status(result.success ? 201 : 400).json(result)
     } catch(error) {
-        console.log("Error making a purchase:", error)
         return res.status(500).json(
             {
                 success: false,

@@ -14,10 +14,13 @@ import {
 from "@heroui/modal";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!)
 
 export default function Payment() {
+    const [error, setError] = useState<boolean>(false)
+
     const router = useRouter()
 
     const items = useSelector((state: RootState) => state.cartReducer.items)
@@ -32,7 +35,7 @@ export default function Payment() {
             const stripe = await stripePromise
 
             const res = await axios.post(
-                process.env.NEXT_PUBLIC_API_URL! + "/payments/purchase",
+                "/api/payments/purchase",
                 {items: items},
                 {
                     headers: {
@@ -42,13 +45,14 @@ export default function Payment() {
             )
 
             if(res && res.data.sessionId) {
+                setError(false)
                 stripe?.redirectToCheckout({ sessionId: res.data.sessionId })
             } else {
                 throw new Error("No session id:", res.data)
             }
         },
         onError: (error) => {
-            console.log("Error processing a payment:", error)
+            setError(true)
         }
     })
 

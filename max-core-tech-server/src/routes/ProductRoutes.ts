@@ -10,7 +10,6 @@ const addNewProduct = async (req: Request, res: Response): Promise<any> => {
         const result = await ProductController.createNewProduct({name, price})
         return res.status(result.success ? 201 : 400).json(result)
     } catch(error) {
-        console.log("Error adding new product:", error)
         return res.status(500).json({
             success: false,
             message: "Server error adding product"

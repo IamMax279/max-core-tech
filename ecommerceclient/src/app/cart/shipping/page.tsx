@@ -27,6 +27,7 @@ export default function Shipping() {
             city: ""
         }
     })
+    const [error, setError] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -48,7 +49,7 @@ export default function Shipping() {
             }
 
             const res = await axios.post(
-                process.env.NEXT_PUBLIC_API_URL + "/user/add-user-address",
+                "/api/user/add-user-address",
                 {data: values, isTemporary: true},
                 {
                     headers: {
@@ -56,7 +57,6 @@ export default function Shipping() {
                     }
                 }
             )
-            console.log("resaefef:", res)
 
             router.push("/cart/shipping/payment")
         }
@@ -70,7 +70,7 @@ export default function Shipping() {
             }
 
             const result = await axios.get(
-                process.env.NEXT_PUBLIC_API_URL + "/user/get-user-data",
+                "/api/user/get-user-data",
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -80,7 +80,8 @@ export default function Shipping() {
             return result
         },
         onSuccess: (data) => {
-            console.log("see the data:", data)
+            setError(false)
+
             if(data?.data.userData) {
                 setUserData(data.data.userData)
                 if(data?.data.userData.userAddress && !data?.data.userData.userAddress.isTemporary) {
@@ -89,7 +90,8 @@ export default function Shipping() {
             }
         },
         onError: (error) => {
-            console.log("error fetching data in /shipping:", error)
+            //unlikely to happen
+            setError(true)
         }
     })
 
@@ -263,6 +265,11 @@ export default function Shipping() {
                             )}
                         </div>
                     </div>
+                    {error &&
+                        <p className="flex self-center my-[10px] text-red-500">
+                            Something went wrong.
+                        </p>
+                    }
                     <PurchaseButton
                     text="Continue"
                     className="bg-purchaseButton flex self-center"

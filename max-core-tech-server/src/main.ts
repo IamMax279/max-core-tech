@@ -11,7 +11,7 @@ const app = express()
 dotenv.config()
 
 app.use(cors({
-    origin: "*",//"http://localhost:3000",
+    origin: ["http://client:3000"],
     credentials: true
 }))
 app.use(express.json())
@@ -22,7 +22,5 @@ app.use(authRouter)
 app.use(paymentsRouter)
 app.use(ordersRouter)
 
-const PORT = process.env.PORT
-app.listen(PORT, () => {
-    console.log("server running on port", PORT)
-})
+const PORT = process.env.PORT || 3001
+app.listen(PORT)

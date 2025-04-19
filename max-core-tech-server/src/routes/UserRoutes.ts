@@ -11,7 +11,6 @@ const registerUser = async (req: Request, res: Response): Promise<any> => {
         const result = await UserController.registerUser(req.body)
         return res.status(result.success ? 201 : 400).json(result)
     } catch(error) {
-        console.error("Registration error:", error);
         return res.status(500).json({
             success: false,
             message: "Server error during registration"
@@ -28,7 +27,6 @@ const verifyUser = async (req: Request, res: Response): Promise<any> => {
         const result = await UserController.verifyUser(token)
         return res.status(result.success ? 201 : 400).json(result)
     } catch(error) {
-        console.error("User verification error:", error);
         return res.status(500).json({
             success: false,
             message: "Server error verifying user"
@@ -46,7 +44,6 @@ const isVerified = async (req: Request, res: Response): Promise<any> => {
         return res.status((result.message === "User is verified." || result.message === "User is not verified.")
         ? 201 : 400).json(result)
     } catch(error) {
-        console.log("Verification check error:", error)
         return res.status(500).json({
             success: false,
             message: "Server error checking if user is verified"
@@ -60,7 +57,6 @@ const signIn = async (req: Request, res: Response): Promise<any> => {
         const result = await UserController.signIn(email, password)
         return res.status(result.success ? 201 : 400).json(result)
     } catch(error) {
-        console.log("User sign in error:", error)
         res.status(500).json({
             success: false,
             message: "Server error signing user in"
@@ -109,7 +105,6 @@ const getUserData = async (req: Request, res: Response): Promise<any> => {
             userData: success ? userData : {}
         })
     } catch(error) {
-        console.log("Error getting user data:", error)
         res.status(500).json({
             success: false,
             message: "Server error getting user data"
@@ -124,7 +119,6 @@ const addUserAddress = async (req: Request, res: Response): Promise<any> => {
         const result = await UserController.addUserAddress(data, isTemporary)
         return res.status(result.success ? 201 : 400).json(result)
     } catch(error) {
-        console.log("Error adding user address:", error)
         return res.status(500).json(
             {
                 success: false,
@@ -153,7 +147,6 @@ const verifyPassword = async (req: Request, res: Response): Promise<any> => {
         const result = await UserController.verifyPassword(password, token)
         return res.status(result.success ? 201 : 400).json({result})
     } catch(error) {
-        console.log("Error verifying user password:", error)
         return res.status(500).json(
             {
                 success: false,
@@ -181,11 +174,33 @@ const changePassword = async (req: Request, res: Response): Promise<any> => {
         const result = await UserController.changePassword(password, token)
         return res.status(result.success ? 201 : 400).json({result})
     } catch(error) {
-        console.log("Error changing user password:", error)
         return res.status(500).json(
             {
                 success: false,
                 message: "Server error changing user password."
+            }
+        )
+    }
+}
+
+const deleteAccount = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const token = req.headers.authorization?.substring(7)
+        if(!token) {
+            throw new Error("Missing authorization.")
+        }
+
+        const { password } = req.body
+        if(!password) {
+            throw new Error("Missing password.")
+        }
+        const result = await UserController.deleteAccount(password, token)
+        return res.status(result.success ? 200 : 401).json({result})
+    } catch(error) {
+        return res.status(500).json(
+            {
+                success: false,
+                message: "Server error deleting user account."
             }
         )
     }
@@ -207,6 +222,10 @@ userRouter.post("/user/add-user-address",
 userRouter.post("/user/verify-password",
     authMiddleware,
     verifyPassword
+)
+userRouter.post("/user/delete-account",
+    authMiddleware,
+    deleteAccount
 )
 userRouter.patch("/user/change-password",
     authMiddleware,

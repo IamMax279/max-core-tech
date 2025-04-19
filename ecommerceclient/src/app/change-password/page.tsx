@@ -37,7 +37,7 @@ export default function ChangePassword() {
             }
 
             return await axios.post(
-                process.env.NEXT_PUBLIC_API_URL + "/user/verify-password",
+                "/api/user/verify-password",
                 {password: password},
                 {
                     headers: {
@@ -48,17 +48,14 @@ export default function ChangePassword() {
         },
         onSuccess: (data) => {
             if(data?.data.result.success) {
-                console.log("This is your party:", data.data)
                 setError(false)
                 router.push(`/new-password?token=${data.data.result.token}`)
             } else {
                 setError(true)
-                console.log("Wrong password.")
             }
         },
         onError: (error) => {
             if(error instanceof AxiosError) {
-                console.log("error making a request:", error)
                 if(error.response?.data.result.message === 'Incorrect password') {
                     setError(true)
                 }
@@ -74,7 +71,7 @@ export default function ChangePassword() {
             }
 
             return await axios.get(
-                'http://localhost:3001/auth/send-password-link',
+                '/api/auth/send-password-link',
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -83,7 +80,6 @@ export default function ChangePassword() {
             )
         },
         onSuccess: (data) => {
-            console.log(data)
             if(data?.data.success) {
                 setForgotError(false)
                 onOpen()
@@ -92,7 +88,6 @@ export default function ChangePassword() {
             }
         },
         onError: (error) => {
-            console.log("Error sending link:", error)
             setForgotError(true)
         }
     })

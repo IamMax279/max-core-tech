@@ -58,7 +58,7 @@ const loadProducts = async () => {
             })
         }
     } catch(error) {
-        console.log("Error adding products:", error)
+        //won't happen
     }
 }
 

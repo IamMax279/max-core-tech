@@ -24,7 +24,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  address UserAddresses?
+  address UserAddresses[]
   orders Order[]
 
   @@map("users")
@@ -32,7 +32,7 @@ model User {
 
 model UserAddresses {
   id BigInt @id @default(autoincrement())
-  userId BigInt @unique
+  userId BigInt
   street String
   apt String
   unit String

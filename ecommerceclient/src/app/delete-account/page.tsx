@@ -51,7 +51,6 @@ export default function DeleteAccount() {
             setError(false)
             setIncorrectPassword(false)
 
-            console.log("RESSPONSE:", data)
             if(data?.data.result.success && data.data.result.message === "User deleted successfully") {
                 AuthService.logout()
                 dispatch(clearCart())
@@ -59,7 +58,6 @@ export default function DeleteAccount() {
             }
         },
         onError: (error) => {
-            console.log("Something went wrong:", error)
             if(error instanceof AxiosError) {
                 if(!error.response?.data.result.success && error.response?.data.result.message === 'Incorrect password.') {
                     setIncorrectPassword(true)

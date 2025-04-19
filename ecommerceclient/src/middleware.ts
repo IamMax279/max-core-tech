@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
-import { AuthService } from './services/AuthService'
 
 export async function middleware(request: NextRequest) {
     const url = request.nextUrl.pathname
 
-    console.log("Middleware executing. path:", request.nextUrl.pathname)
     const token = request.cookies.get('jwt')?.value || request.cookies.get('refresh')?.value
 
     const protectedRoutes = ['/account', '/cart', '/change-password']
@@ -18,7 +16,6 @@ export async function middleware(request: NextRequest) {
     }
 
     if (url.startsWith("/new-password")) {
-        console.log("MIDDLEWARE EXECUTING")
         const token = request.nextUrl.searchParams.get('token')
         const authT = request.cookies.get('jwt')?.value || request.cookies.get('refresh')?.value
         || request.nextUrl.searchParams.get('authT')
@@ -29,7 +26,7 @@ export async function middleware(request: NextRequest) {
 
         try {
             const response = await fetch(
-                process.env.NEXT_PUBLIC_MIDDLEWARE_URL + `/auth/verify-token?token=${token}`,
+                `${request.nextUrl.origin}/api/auth/verify-token?token=${token}`,
                 {
                     headers: {
                         "Authorization": `Bearer ${authT}`
@@ -37,15 +34,6 @@ export async function middleware(request: NextRequest) {
                 }
             )
             const res = await response.json()
-
-            // const isValid = await axios.get(
-            //     process.env.NEXT_PUBLIC_API_URL + `/auth/verify-token?token=${token}`,
-            //     {
-            //         headers: {
-            //             "Authorization": `Bearer ${authT}`
-            //         }
-            //     }
-            // )
     
             if(res.message !== "Token verified successfully") {
                 throw new Error("Invalid token")
@@ -53,11 +41,9 @@ export async function middleware(request: NextRequest) {
 
             return NextResponse.next()
         } catch(error) {
-            console.error("Error validating token:", error)
             return NextResponse.redirect(new URL('/', request.url))
         }
-    } 
-    else {
+    } else {
         if(url.startsWith("/verify-email")) {
             try {
                 const token = request.nextUrl.searchParams.get("token")
@@ -66,11 +52,10 @@ export async function middleware(request: NextRequest) {
                 }
     
                 const res = await fetch(
-                    process.env.NEXT_PUBLIC_MIDDLEWARE_URL + `/user/is-verified?token=${token}`
+                    `${request.nextUrl.origin}/api/user/is-verified?token=${token}`
                 )
 
                 if (!res.ok) {
-                    console.log("Error making a request in the middleware:", res)
                     throw new Error("Error verifying token")
                 }
                 
@@ -82,7 +67,6 @@ export async function middleware(request: NextRequest) {
                     return NextResponse.next()
                 }
             } catch(error) {
-                console.error("Error in verify-email middleware:", error);
                 return NextResponse.redirect(new URL('/', request.url))
             }
         } else {

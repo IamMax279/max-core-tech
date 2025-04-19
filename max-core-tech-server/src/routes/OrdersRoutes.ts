@@ -14,7 +14,6 @@ const addOrder = async (req: Request, res: Response): Promise<any> => {
 
         return res.status(result.success ? 201 : 400).json(result)
     } catch(error) {
-        console.log("Error placing an order:", error)
         return {
             success: false,
             message: "Server error placing an order."

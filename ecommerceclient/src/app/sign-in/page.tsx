@@ -14,7 +14,6 @@ import axios, { AxiosError } from "axios"
 import {  
     Modal,
     ModalContent,
-    ModalHeader,
     ModalBody,
     ModalFooter,
     useDisclosure}
@@ -40,7 +39,7 @@ export default function SignIn() {
     const { mutate } = useMutation({
         mutationFn: async (values: SigninValues) => {
             return await axios.post(
-                process.env.NEXT_PUBLIC_API_URL + "/user/sign-in",
+                "/api/user/sign-in",
                 values
             )
         },
@@ -55,14 +54,11 @@ export default function SignIn() {
             AuthService.setRefresh(data.data.refresh)
 
             document.dispatchEvent(new CustomEvent('cookieChange'))
-
-            console.log("Signed in successfully:", data)
         },
         onError: (error) => {
             setError(false)
             setEmailError(false)
             setUnverified(false)
-            console.log("An error occured:", error)
             if(error instanceof AxiosError) {
                 switch(error.response?.data.message) {
                     case "This user does not exist.":
