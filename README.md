@@ -32,11 +32,6 @@ This is my e-commerce portfolio project. It involves:
   - Payment integration with Stripe
   - Order confirmation
 
-- **Admin Features**
-  - Product management
-  - Order processing
-  - User management
-
 ## Tech Stack
 
 ### Frontend
@@ -44,7 +39,7 @@ This is my e-commerce portfolio project. It involves:
 - **State Management**: Redux for global state, React Query for server state
 - **Styling**: Tailwind CSS with custom theming
 - **Form Handling**: Formik with Yup validation
-- **Components**: Mix of custom components and NextUI library
+- **Components**: HeroUI library (pop-up modals for the most part)
 - **Authentication**: Custom JWT implementation with secure cookie storage
 
 ### Backend
@@ -55,6 +50,4 @@ This is my e-commerce portfolio project. It involves:
 - **Email Services**: Nodemailer for transactional emails
 
 ### DevOps
-- **Containerization**: Docker and Docker Compose
-- **Environment Management**: Separate development and production configurations
-- **Security**: Input validation, CSRF protection, and secure authentication flows
+- **Containerization**: Docker & Docker Compose
