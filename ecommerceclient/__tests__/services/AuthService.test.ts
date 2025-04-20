@@ -28,7 +28,7 @@ describe("AuthService", () => {
         test("return jwt when only refresh token is present", async () => {
             (cookies.get as jest.Mock).mockImplementation((key) => {
                 if (key === "jwt") return undefined
-                if(key === "refresh") return "refresh-token"
+                if (key === "refresh") return "refresh-token"
                 return undefined
             })
 
@@ -50,6 +50,27 @@ describe("AuthService", () => {
                 { refresh: 'refresh-token' }
             );
             expect(setJwtSpy).toHaveBeenCalledWith('new-access-token');
+        })
+
+        test("return undefined when neither jwt nor refresh token are present", async () => {
+            (cookies.get as jest.Mock).mockImplementation((key) => {
+                // if (key === "jwt") return undefined
+                // if (key === "refresh") return undefined
+                // will always return undefined
+                return undefined
+            })
+
+            jest.spyOn(AuthService, "getRefresh").mockReturnValue(undefined);
+
+            (axios.post as jest.Mock).mockResolvedValue({
+                data: {accessToken: undefined}
+            })
+
+            const result = await AuthService.getJwt()
+
+            expect(result).toBe(undefined)
+            expect(cookies.get).toHaveBeenCalledWith("jwt")
+            expect(AuthService.getRefresh).toHaveBeenCalled()
         })
     })
 
