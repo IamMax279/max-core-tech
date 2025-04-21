@@ -45,7 +45,7 @@ export class AuthService {
             }
         })
 
-        const clientURL = process.env.CLIENT_URL || 'http://localhost:3000';
+        const clientURL = process.env.DOMAIN_URL;
         const url = `${clientURL}/verify-email?token=${token}`
 
         try {

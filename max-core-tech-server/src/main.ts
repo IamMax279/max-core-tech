@@ -21,7 +21,7 @@ const limiter = rateLimit({
 app.use(limiter)
 
 app.use(cors({
-    origin: ["http://client:3000"],
+    origin: process.env.CLIENT_URL,
     credentials: true
 }))
 app.use(express.json())
