@@ -57,7 +57,7 @@ const signIn = async (req: Request, res: Response): Promise<any> => {
         const result = await UserController.signIn(email, password)
         return res.status(result.success ? 201 : 400).json(result)
     } catch(error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Server error signing user in"
         })
@@ -105,7 +105,7 @@ const getUserData = async (req: Request, res: Response): Promise<any> => {
             userData: success ? userData : {}
         })
     } catch(error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Server error getting user data"
         })

@@ -45,7 +45,7 @@ export default function PaymentSuccessful() {
                 setAddressId(res.data.userData.addressId)
                 return res.data.addressId
             } else {
-                return ""
+                return res.data
             }
         },
         onSuccess: (data) => {
@@ -82,11 +82,9 @@ export default function PaymentSuccessful() {
             return res
         },
         onSuccess: (data) => {
-            console.log("RESPONSE:", data)
             dispatch(clearCart())
         },
         onError: (error) => {
-            console.log("COS SIE ZJEBALO:", error)
             setError(true)
         }
     })

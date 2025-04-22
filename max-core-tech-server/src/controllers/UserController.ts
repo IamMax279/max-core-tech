@@ -156,10 +156,17 @@ export class UserController {
                 }
             }
 
-            const userAddress = await prisma.userAddresses.findFirst({
-                where: {userId: user.id, isTemporary: false}
+            const userAddresses = await prisma.userAddresses.findMany({
+                where: {userId: user.id},
+                orderBy: {
+                    createdAt: 'desc'
+                }
             })
-            if(!userAddress) {
+
+            const fixed = userAddresses.filter(address => address.isTemporary === false)
+            const temporary = userAddresses.filter(address => address.isTemporary === true)
+
+            if(userAddresses.length === 0) {
                 return {
                     success: true,
                     message: "Only substantial data found.",
@@ -169,9 +176,9 @@ export class UserController {
                 }
             }
 
-            const {id, createdAt, updatedAt, userId, ...data} = userAddress
+            if (temporary.length > 0 && fixed.length === 0) {
+                const {id, createdAt, updatedAt, userId, ...data} = userAddresses[0]
 
-            if (userAddress?.isTemporary) {
                 return {
                     success: true,
                     message: "Data found successfully.",
@@ -182,13 +189,15 @@ export class UserController {
                 }
             }
 
+            const {id, createdAt, updatedAt, userId, ...data} = fixed[0]
+
             return {
                 success: true,
                 message: "Data found successfully.",
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
-                addressId: id.toString(),
+                addressId: fixed[0].id.toString(),
                 userAddress: {
                     ...data,
                     userId: userId.toString(),
