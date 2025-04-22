@@ -82,9 +82,11 @@ export default function PaymentSuccessful() {
             return res
         },
         onSuccess: (data) => {
+            console.log("RESPONSE:", data)
             dispatch(clearCart())
         },
         onError: (error) => {
+            console.log("COS SIE ZJEBALO:", error)
             setError(true)
         }
     })

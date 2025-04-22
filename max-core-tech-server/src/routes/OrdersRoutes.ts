@@ -11,13 +11,15 @@ const addOrder = async (req: Request, res: Response): Promise<any> => {
             throw new Error("Missing fields.")
         }
         const result = await OrdersController.addOrder(userId, addressId, items)
+        console.log("RESULT:", result)
 
         return res.status(result.success ? 201 : 400).json(result)
     } catch(error) {
-        return {
+        console.log("SHIT GOT FUCKED UP:", error)
+        return res.status(500).json({
             success: false,
             message: "Server error placing an order."
-        }
+        })
     }
 }
 
