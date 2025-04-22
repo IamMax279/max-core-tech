@@ -1,7 +1,6 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-COPY .env ./
 RUN npm install
 COPY prisma ./prisma/
 COPY tsconfig.json ./
@@ -17,7 +16,6 @@ COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./
 COPY --from=build /app/package-lock.json ./
-COPY --from=build /app/.env ./
 ENV NODE_ENV=production
 ENV PORT=3001
 EXPOSE 3001
