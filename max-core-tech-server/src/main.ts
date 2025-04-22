@@ -11,14 +11,14 @@ import ordersRouter from "./routes/OrdersRoutes"
 const app = express()
 dotenv.config()
 
-// const limiter = rateLimit({
-//     windowMs: 1000 * 60 * 15,
-//     limit: 100,
-//     message: "Too many requests, try again later.",
-//     standardHeaders: true,
-//     legacyHeaders: false
-// })
-// app.use(limiter)
+const limiter = rateLimit({
+    windowMs: 1000 * 60 * 15,
+    limit: 100,
+    message: "Too many requests, try again later.",
+    standardHeaders: true,
+    legacyHeaders: false
+})
+app.use(limiter)
 
 app.use(cors({
     origin: process.env.CLIENT_URL,
