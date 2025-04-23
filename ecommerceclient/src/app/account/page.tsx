@@ -14,13 +14,14 @@ import Link from "next/link"
 import { IoIosLogOut } from "react-icons/io";
 import { useDispatch } from "react-redux"
 import { clearCart } from "@/redux/Slices"
-import {  
+import {
     Modal,
     ModalContent,
     ModalBody,
     ModalFooter }
 from "@heroui/modal";
 import { Button } from "@nextui-org/button";
+import Loading from "@/components/Loading"
 
 export default function Account() {
     const [userData, setUserData] = useState<UserData>({
@@ -154,6 +155,10 @@ export default function Account() {
       getUserData()
       getUserId()
     }, [])
+
+    if(isPending) {
+        return <Loading/>
+    }
 
     return (
         <div className="flex flex-col items-center justify-center">
@@ -325,6 +330,7 @@ export default function Account() {
                     </p>
                     }
                     <PurchaseButton
+                    loading={isUpdating}
                     text="Save"
                     className="bg-purchaseButton flex self-center"
                     />

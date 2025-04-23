@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query"
 import { AuthService } from "@/services/AuthService"
 import axios from "axios"
 import { RootState } from "@/redux/Store"
+import Loading from "@/components/Loading"
 
 export default function PaymentSuccessful() {
     const [addressId, setAddressId] = useState<string>("")
@@ -26,7 +27,7 @@ export default function PaymentSuccessful() {
 
     const router = useRouter()
 
-    const { mutate: getAddress } = useMutation({
+    const { mutate: getAddress, isPending: fetchingData } = useMutation({
         mutationFn: async (token: string) => {
             if(!token) {
                 throw new Error("token not provided")
@@ -56,7 +57,7 @@ export default function PaymentSuccessful() {
         }
     })
 
-    const {mutate: placeOrder, isPending} = useMutation({
+    const { mutate: placeOrder, isPending } = useMutation({
         mutationFn: async () => {
             const token = await AuthService.getJwt()
             if(!token) {
@@ -105,6 +106,10 @@ export default function PaymentSuccessful() {
             placeOrder()
         }
     }, [addressId])
+
+    if(fetchingData || isPending) {
+        return <Loading/>
+    }
 
     return (
         <Modal

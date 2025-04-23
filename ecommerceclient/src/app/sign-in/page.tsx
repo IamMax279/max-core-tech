@@ -36,7 +36,7 @@ export default function SignIn() {
 
     const router = useRouter()
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: async (values: SigninValues) => {
             return await axios.post(
                 "/api/user/sign-in",
@@ -194,6 +194,7 @@ export default function SignIn() {
                     </p>
                 </div>
                 <PurchaseButton
+                loading={isPending}
                 text="Sign in"
                 color="bg-purchaseButton"
                 className="mt-4"

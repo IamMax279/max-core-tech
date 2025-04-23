@@ -9,6 +9,7 @@ import { useFormik } from "formik"
 import { purchaseDataSchema } from "@/schemas/PurchaseSchema"
 import { UserData } from "@/types/UserTypes"
 import { useRouter } from "next/navigation"
+import Loading from "@/components/Loading"
 
 export default function Shipping() {
     const [addressPresent, setAddressPresent] = useState<boolean>(false)
@@ -28,6 +29,7 @@ export default function Shipping() {
         }
     })
     const [error, setError] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -43,22 +45,30 @@ export default function Shipping() {
         },
         validationSchema: purchaseDataSchema,
         onSubmit: async (values) => {
-            const token = await AuthService.getJwt()
-            if(!token) {
-                return
-            }
+            try {
+                setLoading(true)
 
-            const res = await axios.post(
-                "/api/user/add-user-address",
-                {data: values, isTemporary: true},
-                {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
+                const token = await AuthService.getJwt()
+                if(!token) {
+                    return
                 }
-            )
-
-            router.push("/cart/shipping/payment")
+    
+                const res = await axios.post(
+                    "/api/user/add-user-address",
+                    {data: values, isTemporary: true},
+                    {
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                )
+    
+                router.push("/cart/shipping/payment")
+            } catch(error) {
+                setError(true)
+            } finally {
+                setLoading(false)
+            }
         }
     })
 
@@ -108,6 +118,10 @@ export default function Shipping() {
         mutate()
         getUserId()
     }, [])
+
+    if(isPending) {
+        return <Loading/>
+    }
 
     return (
         <div className="flex flex-col">
@@ -271,6 +285,7 @@ export default function Shipping() {
                         </p>
                     }
                     <PurchaseButton
+                    loading={loading}
                     text="Continue"
                     className="bg-purchaseButton flex self-center"
                     />

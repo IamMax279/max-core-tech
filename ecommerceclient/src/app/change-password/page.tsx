@@ -18,6 +18,7 @@ import {
     useDisclosure}
 from "@heroui/modal";
 import { Button } from "@nextui-org/button"
+import { ThreeDot } from "react-loading-indicators"
 
 export default function ChangePassword() {
     const [password, setPassword] = useState<string>("")
@@ -132,16 +133,23 @@ export default function ChangePassword() {
                     </p>
                     }
                     <PurchaseButton
+                    loading={isPending}
                     text="Continue"
                     className={`bg-purchaseButton flex self-center ${error || forgotError ? "mt-3" : "mt-6"}`}
                     onClick={() => mutate()}
                     />
+                    {!isAwaiting ?
                     <p className="lg:text-start text-center flex self-center mt-4 flex-row items-center text-lg">
                         <span className="text-purchaseButton font-normal cursor-pointer text-lg hover:brightness-90 mr-[2px]"
-                         onClick={() => sendPasswordLink()}>
+                        onClick={() => sendPasswordLink()}>
                             Forgot password?
                         </span>
                     </p>
+                    :
+                    <p className="lg:text-start text-center flex self-center mt-4 flex-row items-center text-lg">
+                        <ThreeDot color="#000" size="small"/>
+                    </p>
+                    }
                 </div>
             </main>
             <Modal

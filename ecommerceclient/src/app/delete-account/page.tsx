@@ -28,7 +28,7 @@ export default function DeleteAccount() {
 
     const dispatch = useDispatch()
 
-    const { mutate: deleteAccount } = useMutation({
+    const { mutate: deleteAccount, isPending } = useMutation({
         mutationFn: async () => {
             const token = await AuthService.getJwt()
             if(!token) {
@@ -110,6 +110,7 @@ export default function DeleteAccount() {
                         }
                     </div>
                     <PurchaseButton
+                    loading={isPending}
                     text="Continue"
                     className={`bg-purchaseButton flex self-center`}
                     onClick={() => deleteAccount()}

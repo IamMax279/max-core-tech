@@ -16,6 +16,7 @@ import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { STRIPE_PUBLIC_KEY } from "@/constants/constants"
+import Loading from "@/components/Loading"
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY)
 
@@ -56,6 +57,10 @@ export default function Payment() {
             setError(true)
         }
     })
+
+    if(isPending) {
+        return <Loading/>
+    }
 
     return (
             <Modal
