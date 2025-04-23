@@ -25,8 +25,8 @@ export class PaymentsController {
             const session = await stripe.checkout.sessions.create({
                 line_items: purchaseData,
                 mode: 'payment',
-                success_url: 'http://localhost:3000/payment-successful',
-                cancel_url: 'http://localhost:3000/'
+                success_url: process.env.DOMAIN_URL + '/payment-successful',
+                cancel_url: process.env.DOMAIN_URL!
             })
 
             return {
