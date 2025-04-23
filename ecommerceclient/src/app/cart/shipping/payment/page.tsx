@@ -43,6 +43,7 @@ export default function Payment() {
                     }
                 }
             )
+            console.log("RES:", res)
 
             if(res && res.data.sessionId) {
                 setError(false)
@@ -52,6 +53,7 @@ export default function Payment() {
             }
         },
         onError: (error) => {
+            console.log("BLAD:", error)
             setError(true)
         }
     })

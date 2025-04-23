@@ -44,34 +44,6 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL('/', request.url))
         }
     } else {
-        // if(url.startsWith("/verify-email")) {
-        //     try {
-        //         const token = request.nextUrl.searchParams.get("token")
-        //         if(!token) {
-        //             return NextResponse.redirect(new URL('/', request.url))
-        //         }
-    
-        //         const res = await fetch(
-        //             `${request.nextUrl.origin}/api/user/is-verified?token=${token}`
-        //         )
-
-        //         if (!res.ok) {
-        //             throw new Error("Error verifying token")
-        //         }
-                
-        //         const data = await res.json();
-    
-        //         if(data && data.success) {
-        //             return NextResponse.redirect(new URL('/', request.url))
-        //         } else {
-        //             return NextResponse.next()
-        //         }
-        //     } catch(error) {
-        //         return NextResponse.redirect(new URL('/', request.url))
-        //     }
-        // } else {
-        //     return NextResponse.next()
-        // }
         return NextResponse.next()
     }
 }
