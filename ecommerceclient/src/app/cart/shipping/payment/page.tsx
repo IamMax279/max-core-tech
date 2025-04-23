@@ -15,8 +15,9 @@ from "@heroui/modal";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { STRIPE_PUBLIC_KEY } from "@/constants/constants"
 
-const stripePromise = loadStripe("pk_test_51Qi0OsIqrP8tyF9Hll8GDHXafVjkwfeoK83M6xXsBfUblhCnQ4IHAwYjuCt1qKNociydsVLjKoNBC0iu4JUHzmWV0064e1TJBj")
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY)
 
 export default function Payment() {
     const [error, setError] = useState<boolean>(false)
@@ -43,7 +44,6 @@ export default function Payment() {
                     }
                 }
             )
-            console.log("RES:", res)
 
             if(res && res.data.sessionId) {
                 setError(false)
@@ -53,7 +53,6 @@ export default function Payment() {
             }
         },
         onError: (error) => {
-            console.log("BLAD:", error)
             setError(true)
         }
     })

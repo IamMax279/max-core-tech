@@ -28,12 +28,10 @@ export default function VerifyEmail() {
             const res = await axios.get(
                 `/api/user/verify-email?token=${token}`
             )
-            console.log("RES:", res)
             if(res.data.success) {
                 setSuccess(true)
             }
         } catch(error) {
-            console.log("BLAD:", error)
             setError(true)
         } finally {
             setVerifying(false)

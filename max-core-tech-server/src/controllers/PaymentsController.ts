@@ -26,7 +26,7 @@ export class PaymentsController {
                 line_items: purchaseData,
                 mode: 'payment',
                 success_url: process.env.DOMAIN_URL + '/payment-successful',
-                cancel_url: process.env.DOMAIN_URL!
+                cancel_url: process.env.DOMAIN_URL
             })
 
             return {

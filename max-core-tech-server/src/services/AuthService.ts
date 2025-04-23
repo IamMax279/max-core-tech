@@ -98,7 +98,7 @@ export class AuthService {
 
         const shortT = this.generateShortLiveToken(userId)
 
-        const url = `http://localhost:3000/new-password?token=${shortT}&authT=${token}`
+        const url = process.env.DOMAIN_URL + `/new-password?token=${shortT}&authT=${token}`
         try {
             await transporter.sendMail({
                 from: process.env.EMAIL_USER,
