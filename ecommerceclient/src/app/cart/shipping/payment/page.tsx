@@ -16,7 +16,7 @@ import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!)
+const stripePromise = loadStripe("pk_test_51Qi0OsIqrP8tyF9Hll8GDHXafVjkwfeoK83M6xXsBfUblhCnQ4IHAwYjuCt1qKNociydsVLjKoNBC0iu4JUHzmWV0064e1TJBj")
 
 export default function Payment() {
     const [error, setError] = useState<boolean>(false)
