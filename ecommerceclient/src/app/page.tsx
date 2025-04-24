@@ -51,6 +51,12 @@ export default function Home() {
     <div className="flex flex-row bg-white">
       <main className="flex flex-col w-full items-center">
         <div className="py-8"></div>
+        <div className="flex items-center justify-center text-center">
+          <h1 className="text-header text-2xl sml:text-4xl">
+            This is just a project, there is no affiliation with any brands mentioned.
+          </h1>
+        </div>
+
         <ProductShowcase
           className="bg-opacity-50 hidden xbig:flex bg-[#dbdad5] w-11/12 h-[800px] rounded-xl relative top-10
           border border-[#bababa] flex-row justify-between"
