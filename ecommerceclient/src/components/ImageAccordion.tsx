@@ -10,13 +10,14 @@ interface AccordionImageProps {
 
 export default function AccordionImage({ src, alt, className = "", onClick }: AccordionImageProps) {
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={414}
-      height={275}
-      className={`object-cover ${className}`}
-      onClick={onClick}
-    />
+    <div className="relative h-[275px] w-full">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className={`object-cover ${className}`}
+        onClick={onClick}
+      />
+    </div>
   );
 }

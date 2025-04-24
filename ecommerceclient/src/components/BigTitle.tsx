@@ -14,6 +14,8 @@ const BigTitle = forwardRef<HTMLDivElement, BigTitleProps>(({ text, className, c
                 font-orbitron text-3xl
                 sm:text-6xl
                 lg:text-7xl
+                text-center
+                sm:text-start
                 ${color}
             `}>
                 <span className={`
