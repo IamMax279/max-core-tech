@@ -184,7 +184,13 @@ export default function Account() {
             <IoIosLogOut
             className="xsmll:hidden block absolute top-[115px] right-6"
             size={28}
-            onClick={() => router.push('/')}
+            onClick={() => {
+                AuthService.logout()
+                dispatch(clearCart())
+
+                window.location.reload()
+                router.replace('/sign-in')  
+            }}
             />
             <main className="flex flex-col mt-28 w-full justify-center items-center">
                 <h1 className="text-header text-2xl sml:text-4xl">
