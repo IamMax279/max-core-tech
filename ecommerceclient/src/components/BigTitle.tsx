@@ -16,14 +16,14 @@ const BigTitle = forwardRef<HTMLDivElement, BigTitleProps>(({ text, className, c
                 lg:text-7xl
                 text-center
                 sm:text-start
-                ${color ? `text-[${color}]` : ''}
+                ${color ? `text-${color}` : ''}
             `}>
                 <span className={`
                     font-orbitron text-5xl relative left-[8px]
                     sm:text-8xl sm:left-[12px]
                     lg:text-9xl lg:left-6
                     ${gap || ''}
-                    ${color ? `text-[${color}]` : ''}
+                    ${color ? `text-${color}` : ''}
                 `}>
                     {text[0]}
                 </span>

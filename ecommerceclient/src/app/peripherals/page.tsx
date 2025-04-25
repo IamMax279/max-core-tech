@@ -30,7 +30,7 @@ export default function Peripherals() {
                     ${isVisible ? styles['fade-in-up'] : ''}`}
                     ref={targetRef}
                     text="PERIPHERALS"
-                    color="#fff"
+                    color="white"
                     gap="lg:mr-5 mr-2"
                 />
             </div>
