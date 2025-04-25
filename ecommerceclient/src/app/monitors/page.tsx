@@ -30,7 +30,7 @@ export default function Monitors() {
                     ${isVisible ? styles['fade-in-up'] : ''}`}
                     ref={targetRef}
                     text="MONITORS"
-                    color="text-background"
+                    color="text-foreground"
                     gap="lg:mr-5 mr-2"
                 />
             </div>

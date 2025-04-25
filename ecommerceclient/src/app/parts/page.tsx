@@ -30,7 +30,7 @@ export default function Parts() {
                     ${isVisible ? styles['fade-in-up'] : ''}`}
                     ref={targetRef}
                     text="PARTS"
-                    color="text-background"
+                    color="text-foreground"
                     gap="lg:mr-5 mr-2"
                 />
             </div>
