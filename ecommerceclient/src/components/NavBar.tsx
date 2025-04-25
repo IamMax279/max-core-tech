@@ -141,6 +141,7 @@ export default function NavBar() {
                     width={32}
                     height={32}
                     className="cursor-pointer mb-1"
+                    onClick={() => router.replace('/')}
                 />
                 {!open &&
                     <RxHamburgerMenu 
