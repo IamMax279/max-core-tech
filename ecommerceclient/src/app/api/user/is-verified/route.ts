@@ -17,7 +17,6 @@ export async function GET(request: NextRequest) {
     
         return NextResponse.json(data, { status: response.status })
     } catch(error) {
-        console.log("API route error:", error)
         return NextResponse.json({ message: "Server Error" }, { status: 500 })
     }
 }

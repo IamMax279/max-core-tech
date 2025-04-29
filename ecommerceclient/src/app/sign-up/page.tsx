@@ -2,8 +2,7 @@
 
 import Image from "next/image"
 import Logo from "../../../public/logo-no-bg.svg"
-import { FaRegEye } from "react-icons/fa";
-import { FaRegEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import PurchaseButton from "@/components/PurchaseButton";
 import { useFormik } from "formik";
